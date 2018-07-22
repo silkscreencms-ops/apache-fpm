@@ -30,10 +30,10 @@ fi
 echo ${HOME}/${PROJECT}/docroot >> /etc/apache2/suexec/${USER}
 
 cp silk.conf /etc/apache2/sites-available/${PROJECT}.conf
-sed -i s/@@USER@@/${USER}/g /etc/apache2/sites-available/${PROJECT}.conf
-sed -i s/@@GROUP@@/${GROUP}/g /etc/apache2/sites-available/${PROJECT}.conf
-sed -i s/@@HOME@@/${HOME}/g /etc/apache2/sites-available/${PROJECT}.conf
-sed -i s/@@PROJECT@@/${PROJECT}/g /etc/apache2/sites-available/${PROJECT}.conf
+sed -i -e "s/@@USER@@/${USER}/g" /etc/apache2/sites-available/${PROJECT}.conf
+sed -i -e "s/@@GROUP@@/${GROUP}/g" /etc/apache2/sites-available/${PROJECT}.conf
+sed -i -e "s/@@HOME@@/${HOME}/g" /etc/apache2/sites-available/${PROJECT}.conf
+sed -i -e "s/@@PROJECT@@/${PROJECT}/g" /etc/apache2/sites-available/${PROJECT}.conf
 
 a2ensite ${PROJECT}
 
@@ -58,6 +58,6 @@ if [ -f ${FPM_ROOT}/pool.d/${USER}.conf ] ; then
 	echo "PHP-FPM pool already setup."
 else
 	cp fpm-pool.conf ${FPM_ROOT}/pool.d/${USER}.conf
-	sed -i s/@@USER@@/${USER}/g ${FPM_ROOT}/pool.d/${USER}.conf
-	sed -i s/@@GROUP@@/${GROUP}/g ${FPM_ROOT}/pool.d/${USER}.conf
+	sed -i -e "s/@@USER@@/${USER}/g" ${FPM_ROOT}/pool.d/${USER}.conf
+	sed -i -e "s/@@GROUP@@/${GROUP}/g" ${FPM_ROOT}/pool.d/${USER}.conf
 fi
