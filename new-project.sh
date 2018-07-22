@@ -60,4 +60,5 @@ else
 	cp fpm-pool.conf ${FPM_ROOT}/pool.d/${USER}.conf
 	sed -i -e "s/@@USER@@/${USER}/g" ${FPM_ROOT}/pool.d/${USER}.conf
 	sed -i -e "s/@@GROUP@@/${GROUP}/g" ${FPM_ROOT}/pool.d/${USER}.conf
+	service php7.0-fpm restart
 fi
