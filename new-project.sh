@@ -48,8 +48,8 @@ else
 	curl -s -L -o /tmp/silkscreen.tgz https://github.com/silkscreencms/silkscreen/archive/silkscreen-${SILK_VERSION}.tar.gz 2>&1 > ${PROJECT}-new.log
 	tar -C ${HOME}/${PROJECT}/docroot --strip-components=1 -xaf /tmp/silkscreen.tgz 2>&1 > ${PROJECT}-new.log
 	rm /tmp/silkscreen.tgz 2>&1 > ${PROJECT}-new.log
+	cd ${HOME}/${PROJECT} && git init . && git add -A . && cd -
 	chown -R $USER:$GROUP ${HOME}/${PROJECT}/. 2>&1 > ${PROJECT}-new.log
-	echo ">>> Don't forget to create a git project!"
 fi
 
 # Setup FPM Project Specific Pieces
