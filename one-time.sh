@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DATABASE=mysql
+DATABASE=$1
 
 #### DON'T EDIT ANYTHING BELOW THIS LINE ####
 
@@ -9,9 +9,14 @@ if [ $(id -u) -ne 0 ]; then
 	exit;
 fi
 
+if [ x$DATABASE = "x" ]; then
+	echo "usage: $0 <DATABASE>"
+	exit;
+fi
+
 apt-get update
-apt-get install -y apache2 apache2-suexec-custom libapache2-mod-fcgid php-fpm
-apt-get install -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git curl
+apt-get install -qq -y apache2 apache2-suexec-custom libapache2-mod-fcgid php-fpm
+apt-get install -qq -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git curl
 
 case $DATABASE in
 	mariadb|mysql)
@@ -27,7 +32,7 @@ case $DATABASE in
 
 esac
 
-apt-get install -y $DB_PKGS
+apt-get install -qq -y $DB_PKGS
 
 if [ x$DRIVER != "x" ]; then 
 	# Fetch the latest drivers
@@ -35,7 +40,7 @@ if [ x$DRIVER != "x" ]; then
 fi
 
 # Configure Apache
-a2enmod proxy_fcgi setenvif rewrite suexec proxy
-a2enconf php7.0-fpm
+a2enmod -q proxy_fcgi setenvif rewrite suexec proxy
+a2enconf -q php7.0-fpm
 
 service apache2 restart
