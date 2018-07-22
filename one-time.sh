@@ -14,34 +14,41 @@ if [ x$DATABASE = "x" ]; then
 	exit;
 fi
 
+# Reset the log file
+echo ">>> Starting Install <<<" > one-time.log
+
 echo -n "--> Updating repositories..."
-apt-get update -qq
+apt-get update 2>&1 >> one-time.log
 echo "done."
 
 echo -n "--> Installing Apache..."
-apt-get install -qq -y apache2 apache2-suexec-custom libapache2-mod-fcgid php-fpm > /dev/null
+apt-get install -y apache2 apache2-suexec-custom libapache2-mod-fcgid php-fpm 2>&1 >> one-time.log
 echo "done."
 
 echo -n "--> Installing PHP..."
-apt-get install -qq -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git curl > /dev/null
+apt-get install -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git curl 2>&1 >> one-time.log
 echo "done."
 
 case $DATABASE in
 	mariadb|mysql)
 		DB_PKGS="mariadb-client mariadb-server php-mysql"
-	;;
+		;;
 	pgsql|postgres)
 		DB_PKGS="postgresql postgresql-client php-pgsql"
 		DB_DRIVER="database_pgsql"
-	;;
+		;;
 	sqlite|sqlite3)
 		DB_PKGS="php-sqlite3"
 		DB_DRIVER="database_sqlite"
+		;;
+	*)
+		echo "Unknown database ${DATABASE}."
+		exit;
 
 esac
 
 echo -n "--> Installing database $DATABASE..."
-apt-get install -qq -y $DB_PKGS > /dev/null
+apt-get install -y ${DB_PKGS} 2>&1 >> one-time.log
 echo "done."
 
 if [ x$DRIVER != "x" ]; then 
@@ -50,9 +57,9 @@ if [ x$DRIVER != "x" ]; then
 fi
 
 # Configure Apache
-a2enmod -q proxy_fcgi setenvif rewrite suexec proxy > /dev/null
-a2enconf -q php7.0-fpm > /dev/null
+a2enmod proxy_fcgi setenvif rewrite suexec proxy 2>&1 >> one-time.log
+a2enconf php7.0-fpm 2>&1 >> one-time.log
 
-service apache2 restart
+service apache2 restart 2>&1 >> one-time.log
 
 echo "Ready for a new project.  Run sudo ./new-project.sh <project>"
