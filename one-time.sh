@@ -4,6 +4,10 @@ DATABASE=$1
 
 #### DON'T EDIT ANYTHING BELOW THIS LINE ####
 
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+EOF
+}
+
 if [ $(id -u) -ne 0 ]; then
 	echo "Must run as root."
 	exit;
