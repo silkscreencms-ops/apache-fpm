@@ -11,7 +11,7 @@ fi
 
 apt-get update
 apt-get install -y apache2 apache2-suexec-custom libapache2-mod-fcgid php-fpm
-apt-get install -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git
+apt-get install -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git curl
 
 case $DATABASE in
 	mariadb|mysql)

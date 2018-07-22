@@ -32,7 +32,7 @@ echo ${HOME}/${PROJECT}/docroot >> /etc/apache2/suexec/${USER}
 cp silk.conf /etc/apache2/sites-available/${PROJECT}.conf
 sed -i -e "s/@@USER@@/${USER}/g" /etc/apache2/sites-available/${PROJECT}.conf
 sed -i -e "s/@@GROUP@@/${GROUP}/g" /etc/apache2/sites-available/${PROJECT}.conf
-sed -i -e "s/@@HOME@@/${HOME}/g" /etc/apache2/sites-available/${PROJECT}.conf
+sed -i -e "s#@@HOME@@#${HOME}#g" /etc/apache2/sites-available/${PROJECT}.conf
 sed -i -e "s/@@PROJECT@@/${PROJECT}/g" /etc/apache2/sites-available/${PROJECT}.conf
 
 a2ensite ${PROJECT}
@@ -45,9 +45,9 @@ if [ -d ${HOME}/${PROJECT} ]; then
 else
 	## Setup Silkscreen
 	mkdir -p ${HOME}/${PROJECT}/docroot ${HOME}/${PROJECT}/database ${HOME}/${PROJECT}/privat ${HOME}/${PROJECT}/config
-	curl -o /tmp/silkscreen.tgz https://github.com/silkscreencms/silkscreen/archive/silkscreen-${VERSION}.tar.gz
+	curl -s -L -o /tmp/silkscreen.tgz https://github.com/silkscreencms/silkscreen/archive/silkscreen-${SILK_VERSION}.tar.gz
 	tar -C ${HOME}/${PROJECT}/docroot --strip-components=1 -xaf /tmp/silkscreen.tgz
-	rm /tmp/silkscreen.tgz
+	#rm /tmp/silkscreen.tgz
 	chown -R $USER:$GROUP ${HOME}/${PROJECT}/.
 	echo ">>> Don't forget to create a git project!"
 fi
