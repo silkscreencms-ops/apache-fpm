@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$DATABASE=mysql
+DATABASE=mysql
 
 if [ $(id -u) -ne 0 ]; then
 	echo "Must run as root."
