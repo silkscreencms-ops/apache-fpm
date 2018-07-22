@@ -14,16 +14,24 @@ if [ x$DATABASE = "x" ]; then
 	exit;
 fi
 
-apt-get update
-apt-get install -qq -y apache2 apache2-suexec-custom libapache2-mod-fcgid php-fpm
-apt-get install -qq -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git curl
+echo -n "--> Updating repositories..."
+apt-get update -qq
+echo "done."
+
+echo -n "--> Installing Apache..."
+apt-get install -qq -y apache2 apache2-suexec-custom libapache2-mod-fcgid php-fpm > /dev/null
+echo "done."
+
+echo -n "--> Installing PHP..."
+apt-get install -qq -y php-gd php-json php-xml php-mbstring php-zip php-curl unzip git curl > /dev/null
+echo "done."
 
 case $DATABASE in
 	mariadb|mysql)
 		DB_PKGS="mariadb-client mariadb-server php-mysql"
 	;;
 	pgsql|postgres)
-		DB_PKGS="postgresql-server postgresql-client php-pgsql"
+		DB_PKGS="postgresql postgresql-client php-pgsql"
 		DB_DRIVER="database_pgsql"
 	;;
 	sqlite|sqlite3)
@@ -32,7 +40,9 @@ case $DATABASE in
 
 esac
 
-apt-get install -qq -y $DB_PKGS
+echo -n "--> Installing database $DATABASE..."
+apt-get install -qq -y $DB_PKGS > /dev/null
+echo "done."
 
 if [ x$DRIVER != "x" ]; then 
 	# Fetch the latest drivers
@@ -40,7 +50,9 @@ if [ x$DRIVER != "x" ]; then
 fi
 
 # Configure Apache
-a2enmod -q proxy_fcgi setenvif rewrite suexec proxy
-a2enconf -q php7.0-fpm
+a2enmod -q proxy_fcgi setenvif rewrite suexec proxy > /dev/null
+a2enconf -q php7.0-fpm > /dev/null
 
 service apache2 restart
+
+echo "Ready for a new project.  Run sudo ./new-project.sh <project>"
