@@ -35,11 +35,9 @@ case $DATABASE in
 		;;
 	pgsql|postgres)
 		DB_PKGS="postgresql postgresql-client php-pgsql"
-		DB_DRIVER="database_pgsql"
 		;;
 	sqlite|sqlite3)
 		DB_PKGS="php-sqlite3"
-		DB_DRIVER="database_sqlite"
 		;;
 	*)
 		echo "Unknown database ${DATABASE}."
@@ -50,11 +48,6 @@ esac
 echo -n "--> Installing database $DATABASE..."
 apt-get install -y ${DB_PKGS} 2>&1 >> one-time.log
 echo "done."
-
-if [ x$DRIVER != "x" ]; then 
-	# Fetch the latest drivers
-	echo "Drivers"
-fi
 
 # Configure Apache
 a2enmod proxy_fcgi setenvif rewrite suexec proxy 2>&1 >> one-time.log
