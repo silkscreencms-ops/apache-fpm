@@ -29,13 +29,13 @@ if [ -f /etc/apache2/suexec/${USER} ]; then
 fi
 echo ${HOME}/${PROJECT}/docroot >> /etc/apache2/suexec/${USER}
 
-cp silk.conf /etc/apache2/sites-available/${PROJECT}.conf
-sed -i -e "s/@@USER@@/${USER}/g" /etc/apache2/sites-available/${PROJECT}.conf
-sed -i -e "s/@@GROUP@@/${GROUP}/g" /etc/apache2/sites-available/${PROJECT}.conf
-sed -i -e "s#@@HOME@@#${HOME}#g" /etc/apache2/sites-available/${PROJECT}.conf
-sed -i -e "s/@@PROJECT@@/${PROJECT}/g" /etc/apache2/sites-available/${PROJECT}.conf
+cp silk.conf /etc/apache2/sites-available/${PROJECT}.conf 2>&1 > ${PROJECT}-new.log
+sed -i -e "s/@@USER@@/${USER}/g" /etc/apache2/sites-available/${PROJECT}.conf 2>&1 > ${PROJECT}-new.log
+sed -i -e "s/@@GROUP@@/${GROUP}/g" /etc/apache2/sites-available/${PROJECT}.conf 2>&1 > ${PROJECT}-new.log
+sed -i -e "s#@@HOME@@#${HOME}#g" /etc/apache2/sites-available/${PROJECT}.conf 2>&1 > ${PROJECT}-new.log
+sed -i -e "s/@@PROJECT@@/${PROJECT}/g" /etc/apache2/sites-available/${PROJECT}.conf 2>&1 > ${PROJECT}-new.log
 
-a2ensite ${PROJECT}
+a2ensite ${PROJECT} 2>&1 > ${PROJECT}-new.log
 
 
 # Don't overwrite an existing project, it may have been checked out from git already.
@@ -44,11 +44,11 @@ if [ -d ${HOME}/${PROJECT} ]; then
 	echo "Project directory found, will not setup ${HOME}/${PROJECT}"
 else
 	## Setup Silkscreen
-	mkdir -p ${HOME}/${PROJECT}/docroot ${HOME}/${PROJECT}/database ${HOME}/${PROJECT}/privat ${HOME}/${PROJECT}/config
-	curl -s -L -o /tmp/silkscreen.tgz https://github.com/silkscreencms/silkscreen/archive/silkscreen-${SILK_VERSION}.tar.gz
-	tar -C ${HOME}/${PROJECT}/docroot --strip-components=1 -xaf /tmp/silkscreen.tgz
-	#rm /tmp/silkscreen.tgz
-	chown -R $USER:$GROUP ${HOME}/${PROJECT}/.
+	mkdir -p ${HOME}/${PROJECT}/docroot ${HOME}/${PROJECT}/database ${HOME}/${PROJECT}/privat ${HOME}/${PROJECT}/config 2>&1 > ${PROJECT}-new.log
+	curl -s -L -o /tmp/silkscreen.tgz https://github.com/silkscreencms/silkscreen/archive/silkscreen-${SILK_VERSION}.tar.gz 2>&1 > ${PROJECT}-new.log
+	tar -C ${HOME}/${PROJECT}/docroot --strip-components=1 -xaf /tmp/silkscreen.tgz 2>&1 > ${PROJECT}-new.log
+	rm /tmp/silkscreen.tgz 2>&1 > ${PROJECT}-new.log
+	chown -R $USER:$GROUP ${HOME}/${PROJECT}/. 2>&1 > ${PROJECT}-new.log
 	echo ">>> Don't forget to create a git project!"
 fi
 
@@ -57,8 +57,8 @@ fi
 if [ -f ${FPM_ROOT}/pool.d/${USER}.conf ] ; then 
 	echo "PHP-FPM pool already setup."
 else
-	cp fpm-pool.conf ${FPM_ROOT}/pool.d/${USER}.conf
-	sed -i -e "s/@@USER@@/${USER}/g" ${FPM_ROOT}/pool.d/${USER}.conf
-	sed -i -e "s/@@GROUP@@/${GROUP}/g" ${FPM_ROOT}/pool.d/${USER}.conf
-	service php7.0-fpm restart
+	cp fpm-pool.conf ${FPM_ROOT}/pool.d/${USER}.conf 2>&1 > ${PROJECT}-new.log
+	sed -i -e "s/@@USER@@/${USER}/g" ${FPM_ROOT}/pool.d/${USER}.conf 2>&1 > ${PROJECT}-new.log
+	sed -i -e "s/@@GROUP@@/${GROUP}/g" ${FPM_ROOT}/pool.d/${USER}.conf 2>&1 > ${PROJECT}-new.log
+	service php7.0-fpm restart 2>&1 > ${PROJECT}-new.log
 fi
