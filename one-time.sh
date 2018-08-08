@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 DATABASE=$1
 
 #### DON'T EDIT ANYTHING BELOW THIS LINE ####
